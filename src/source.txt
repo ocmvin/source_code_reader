@@ -1,0 +1,41 @@
+RULE_50
+An organization cannot have duplicate active practice address records
+final String RULE_50_ERROR_MESSAGE =
+"Provider with EID[%s] cannot have duplicate practice address with different standardizedAddressIds";
+ErrorLoggingUtility.populateWarningCollection(errorCollection, RuleToErrorCodeMapping.RULE_50.getErrorCode(), String.format(ErrorCodeConstants.RULE_50_ERROR_MESSAGE, requestProvider.getMasterProviderId()), ErrorLevel.ORANGE, !StringUtils.isEmpty(requestProvider.getMasterProviderId()) ? Long.valueOf(requestProvider.getMasterProviderId()) : null, null, address,
+                                                                                                                                                                methodName);
+ErrorCodeConstants.java
+public static final String RULE_50_ERROR_MESSAGE = "Provider with EID[%s] cannot have duplicate practice address with different standardizedAddressIds";
+RuleToErrorCodeMapping.java
+RULE_50("BRE005000"),
+BusinessRules.java
+                                                                                                                                ErrorLoggingUtility.populateWarningCollection(errorCollection, RuleToErrorCodeMapping.RULE_50.getErrorCode(), String.format(ErrorCodeConstants.RULE_50_ERROR_MESSAGE, requestProvider.getMasterProviderId()), ErrorLevel.ORANGE, !StringUtils.isEmpty(requestProvider.getMasterProviderId()) ? Long.valueOf(requestProvider.getMasterProviderId()) : null, null, address,
+                                                                                                                                                                methodName);
+sps_rule.sql
+Insert into sps_rule (ERR_CD,RULE_TYPE_CD,RULE_CTGRY_CD,RULE_DESC,SPS_QUAD_CD,SRC_SYS_CD,SVRTY_LVL_CD,RULE_VAL_TXT,RULE_PRTY_NBR,ACTV_IND,CREAT_DT,CREAT_USER_ID,LAST_UPDT_DT,LAST_UPDT_USER_ID) values ('BRE005000','Business','data_miss','An organization cannot have duplicate active practice address records','Provider','PEGA','Orange','Practice address already exists for this organization',null,'Y',CURRENT_TIMESTAMP,'SPS_CORE',CURRENT_TIMESTAMP,'SPS_CORE');
+----
+Insert into sps_rule (ERR_CD,RULE_TYPE_CD,RULE_CTGRY_CD,RULE_DESC,SPS_QUAD_CD,SRC_SYS_CD,SVRTY_LVL_CD,RULE_VAL_TXT,RULE_PRTY_NBR,ACTV_IND,CREAT_DT,CREAT_USER_ID,LAST_UPDT_DT,LAST_UPDT_USER_ID) values ('8000','data_qlty','data_miss','Data Constraint Violation for [%s]','NA','ETL','Yellow',null,null,null,CURRENT_TIMESTAMP,'SPS_CORE',CURRENT_TIMESTAMP,'SPS_CORE');
+'8000','data_qlty','data_miss','Data Constraint Violation for [%s]','NA','ETL','Yellow',null,null,null,CURRENT_TIMESTAMP,'SPS_CORE',CURRENT_TIMESTAMP,'SPS_CORE');
+NPIAddRequestView.java
+@NotNull(message = ErrorCodeConstants.DATA_VALIDATION_CODE + ErrorCodeConstants.SPLITTER + ErrorCodeConstants.RULE_52_ERROR_MESSAGE)
+@NotNull(message = ErrorCodeConstants.DATA_VALIDATION_CODE + ErrorCodeConstants.SPLITTER + ErrorCodeConstants.RULE_52_ERROR_MESSAGE)
+@NotNull(message = ErrorCodeConstants.DATA_VALIDATION_CODE + ErrorCodeConstants.SPLITTER + ErrorCodeConstants.RULE_52_ERROR_MESSAGE)
+GroupingNoteAddRequestView.java
+@Size(max = 50, message = ErrorCodeConstants.DATA_VALIDATION_CODE + ErrorCodeConstants.SPLITTER + ErrorCodeConstants.RGNL_NTWK_ID)
+public static final String RGNL_NTWK_ID = "regionalNetworkId [${validatedValue}] is invalid, regionalNetworkId cannot be more than {max} characters";
+ErrorCodeConstants.java
+public static final String RULE_52_ERROR_MESSAGE = "Effective date is mandatory for all address types";
+public static final String DATA_VALIDATION_CODE = "8000";
+-----
+BUSINESS_VALIDATION_ERROR_CODE = "4042"
+throw new SPSBusinessException(new ErrorMessage(ErrorCodeConstants.DATA_ERROR, FbdaConstant.METADATA_USER_ID_ERROR_MSG));
+throw new SPSBusinessException(new ErrorMessage(FbdaConstant.FBDA_DATA_ERROR_CODE, FbdaConstant.FBDA_REQUEST_DATE_RANGE_ERROR_MSG));
+FbdaConstant.java
+public static final String FBDA_DATA_ERROR_CODE = "8060";
+FbdaConstant.java
+public static final String FBDA_ENTITY_SELECTED_ERROR_MSG = "Please input master provider IDs for the entity selected only"
+FbdaConstant.FBDA_DATA_ERROR_CODE, FbdaConstant.FBDA_ENTITY_SELECTED_ERROR_MSG
+throw new SPSBusinessException(new ErrorMessage(ErrorCodeConstants.BUSINESS_VALIDATION_ERROR_CODE, "The attribute already exists with the same effective date as a created in error record"));
+throw new SPSBusinessException(new ErrorMessage(ErrorCodeConstants.BUSINESS_VALIDATION_ERROR_CODE, "The Member Referral Type already exists with an overlapping effective and termination dates"));
+throw new SPSBusinessException(new ErrorMessage(ErrorCodeConstants.BUSINESS_VALIDATION_ERROR_CODE_NO_GROUPING_DETAILS_FOUND, "No Grouping Address Details found for given Grouping Address ID"));
+throw new SPSBusinessException(new ErrorMessage(ErrorCodeConstants.BUSINESS_VALIDATION_ERROR_CODE_NO_GROUPING_DETAILS_FOUND, "Grouping Address Id required for adding/editing grouping contact information"));
