@@ -157,7 +157,7 @@ public class ErrorCodeMain {
 		try {
 			code_msg = Files.lines(path).filter(line ->
 						{
-							if(line.contains(RuleToErrorCodeMapping_CONST) && line.contains(ErrorCodeConstants_CONST)) {
+							if(checkForExpectedPattern(line)) {
 								return true;
 							} else
 								return false;
@@ -188,6 +188,30 @@ public class ErrorCodeMain {
 			e.printStackTrace();
 		}
 
+		
+	}
+
+	private boolean checkForExpectedPattern(String line) {
+		
+		boolean flag=false;
+		if(line.contains(RuleToErrorCodeMapping_CONST) && line.contains(ErrorCodeConstants_CONST))
+//Check for Pattern
+//ErrorLoggingUtility.populateWarningCollection(errorCollection, RuleToErrorCodeMapping.RULE_50.getErrorCode(), String.format(ErrorCodeConstants.RULE_50_ERROR_MESSAGE, requestProvider.getMasterProviderId()), ErrorLevel.ORANGE, !StringUtils.isEmpty(requestProvider.getMasterProviderId()) ? Long.valueOf(requestProvider.getMasterProviderId()) : null, null, address,methodName);
+			flag=true;
+		else if(false) { //TODO: check if  line contains ErrorLoggingUtility.populateWarningCollection(errorCollection, RuleToErrorCodeMapping.
+			//ErrorLoggingUtility.populateWarningCollection(errorCollection, RuleToErrorCodeMapping.RULE_50.getErrorCode(), "Invali xys field", ErrorLevel.ORANGE, !StringUtils.isEmpty(requestProvider.getMasterProviderId()) ? Long.valueOf(requestProvider.getMasterProviderId()) : null, null, address,methodName);
+		}else if(false) {//TODO:  check if line has //@NotNull(message = ErrorCodeConstants. and 3 occurrences of ErrorCodeConstants. 
+			
+		//@NotNull(message = ErrorCodeConstants.DATA_VALIDATION_CODE + ErrorCodeConstants.SPLITTER + ErrorCodeConstants.RULE_52_ERROR_MESSAGE)
+			
+		}
+		
+		
+		return flag;
+		
+		
+		
+		
 		
 	}
 	
