@@ -12,4 +12,7 @@ public class ErrorCodeConstants {
 	
 	public static final String DATA_VALIDATION_CODE = "8000";
 
+	public static final String RULE_52_ERROR_MESSAGE = "RULE_52 Subscriber with EID[%s] cannot have duplicate practice address with different standardizedAddressIds";
+
+
 }

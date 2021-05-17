@@ -19,6 +19,8 @@ public class ErrorCodeMain {
 	private static String RuleToErrorCodeMapping_CONST= "RuleToErrorCodeMapping.";
 	private static String ErrorCodeConstants_CONST= "ErrorCodeConstants.";
 	private static String ErrorLevel="ErrorLevel.";
+	private static String ErrorLoggingUtility="ErrorLoggingUtility.populateWarningCollection(";
+	private static String ANNOTATION_NOTNULL ="@NotNull(";
 	
 	private static Map<String, String> keyValMap = new ConcurrentHashMap<String, String>();
 
@@ -153,6 +155,9 @@ public class ErrorCodeMain {
 
 	private void assessFile(Path path) {
 		System.out.println("########### File "+path.toFile().getName());
+		if("NPIAddRequestView.java".equals(path.toFile().getName())) {
+			System.out.println("");
+		}
 		Map<String, String> code_msg = null;
 		try {
 			code_msg = Files.lines(path).filter(line ->
@@ -192,40 +197,86 @@ public class ErrorCodeMain {
 	}
 
 	private boolean checkForExpectedPattern(String line) {
-		
 		boolean flag=false;
 		if(line.contains(RuleToErrorCodeMapping_CONST) && line.contains(ErrorCodeConstants_CONST))
-//Check for Pattern
-//ErrorLoggingUtility.populateWarningCollection(errorCollection, RuleToErrorCodeMapping.RULE_50.getErrorCode(), String.format(ErrorCodeConstants.RULE_50_ERROR_MESSAGE, requestProvider.getMasterProviderId()), ErrorLevel.ORANGE, !StringUtils.isEmpty(requestProvider.getMasterProviderId()) ? Long.valueOf(requestProvider.getMasterProviderId()) : null, null, address,methodName);
+			//Check for Pattern
+			//ErrorLoggingUtility.populateWarningCollection(errorCollection, RuleToErrorCodeMapping.RULE_50.getErrorCode(), String.format(ErrorCodeConstants.RULE_50_ERROR_MESSAGE, requestProvider.getMasterProviderId()), ErrorLevel.ORANGE, !StringUtils.isEmpty(requestProvider.getMasterProviderId()) ? Long.valueOf(requestProvider.getMasterProviderId()) : null, null, address,methodName);
 			flag=true;
-		else if(false) { //TODO: check if  line contains ErrorLoggingUtility.populateWarningCollection(errorCollection, RuleToErrorCodeMapping.
+		else if(line.contains(ErrorLoggingUtility) && line.contains(RuleToErrorCodeMapping_CONST)) { //TODO: check if  line contains ErrorLoggingUtility.populateWarningCollection(errorCollection, RuleToErrorCodeMapping.
 			//ErrorLoggingUtility.populateWarningCollection(errorCollection, RuleToErrorCodeMapping.RULE_50.getErrorCode(), "Invali xys field", ErrorLevel.ORANGE, !StringUtils.isEmpty(requestProvider.getMasterProviderId()) ? Long.valueOf(requestProvider.getMasterProviderId()) : null, null, address,methodName);
-		}else if(false) {//TODO:  check if line has //@NotNull(message = ErrorCodeConstants. and 3 occurrences of ErrorCodeConstants. 
+			
+		}else if(line.contains(ANNOTATION_NOTNULL) && line.contains(ErrorCodeConstants_CONST)) {//TODO:  check if line has //@NotNull(message = ErrorCodeConstants. and 3 occurrences of ErrorCodeConstants. 
+			flag=true;
 			
 		//@NotNull(message = ErrorCodeConstants.DATA_VALIDATION_CODE + ErrorCodeConstants.SPLITTER + ErrorCodeConstants.RULE_52_ERROR_MESSAGE)
 			
 		}
-		
-		
-		return flag;
-		
-		
-		
-		
-		
+				return flag;
 	}
 	
 	
 	private String[] errorCodeNMsg(String line) {
-		String rule_key =line.substring(line.indexOf(RuleToErrorCodeMapping_CONST)+RuleToErrorCodeMapping_CONST.length(),line.indexOf(".getErrorCode()"));
-		String errorMessage_key =line.substring(line.indexOf(ErrorCodeConstants_CONST)+ErrorCodeConstants_CONST.length(),line.indexOf("_ERROR_MESSAGE"));
+		return parsePattern(line);
+}
+	
+	
+	private int getPattern(String line) {
+		int patternType=1;
 		
-		String errorCode =keyValMap.get(rule_key);
-		String errorMessageKey=errorMessage_key.strip()+"_ERROR_MESSAGE";
-		//System.out.println("Rule KEY "+rule_key +" ErrorCode: "+errorCode+" errorMessageKey: "+errorMessageKey);
-		String errorMessage =keyValMap.get(errorMessageKey);
-		//System.out.println("errorMessage +++++++ "+errorMessage+" errorMessageKey: "+errorMessageKey+" "+errorMessageKey.length());
-		return new String[] {errorCode,errorMessage};
+	
+		switch(patternType) {
+		
+		case 1: 
+			
+		default:
+			System.out.println("fds");
+		}
+		
+		return patternType;
+	}
+	
+	private String[] parsePattern(String line) {
+
+		String[] errorCode_MsgArr=new String[2] ;
+		String errorCode=null;
+		String errorMessage=null;
+		
+		boolean flag=false;
+		if(line.contains(RuleToErrorCodeMapping_CONST) && line.contains(ErrorCodeConstants_CONST)) {
+			//ErrorLoggingUtility.populateWarningCollection(errorCollection, RuleToErrorCodeMapping.RULE_50.getErrorCode(), String.format(ErrorCodeConstants.RULE_50_ERROR_MESSAGE, requestProvider.getMasterProviderId()), ErrorLevel.ORANGE, !StringUtils.isEmpty(requestProvider.getMasterProviderId()) ? Long.valueOf(requestProvider.getMasterProviderId()) : null, null, address,methodName);
+			
+			String rule_key =line.substring(line.indexOf(RuleToErrorCodeMapping_CONST)+RuleToErrorCodeMapping_CONST.length(),line.indexOf(".getErrorCode()"));
+			String errorMessage_key =line.substring(line.indexOf(ErrorCodeConstants_CONST)+ErrorCodeConstants_CONST.length(),line.indexOf("_ERROR_MESSAGE"));
+			
+			errorCode =keyValMap.get(rule_key);
+			String errorMessageKey=errorMessage_key.strip()+"_ERROR_MESSAGE";
+			errorMessage =keyValMap.get(errorMessageKey);
+			
+			return new String[] {errorCode,errorMessage};
+		}else if(line.contains(ErrorLoggingUtility) && line.contains(RuleToErrorCodeMapping_CONST)) { //TODO: check if  line contains ErrorLoggingUtility.populateWarningCollection(errorCollection, RuleToErrorCodeMapping.
+			//ErrorLoggingUtility.populateWarningCollection(errorCollection, RuleToErrorCodeMapping.RULE_50.getErrorCode(), "Invali xys field", ErrorLevel.ORANGE, !StringUtils.isEmpty(requestProvider.getMasterProviderId()) ? Long.valueOf(requestProvider.getMasterProviderId()) : null, null, address,methodName);
+			String rule_key =line.substring(line.indexOf(RuleToErrorCodeMapping_CONST)+RuleToErrorCodeMapping_CONST.length(),line.indexOf(".getErrorCode()"));
+			errorCode =keyValMap.get(rule_key);
+			
+			line=line.substring(line.indexOf(".getErrorCode()")+".getErrorCode()".length());
+			errorMessage =line.substring(line.indexOf(","), line.indexOf("\","));		//,line.indexOf("_ERROR_MESSAGE"));
+			return new String[] {errorCode,errorMessage.strip()};
+			
+		}else if(line.contains(ANNOTATION_NOTNULL) && line.contains(ErrorCodeConstants_CONST)) {//TODO:  check if line has //@NotNull(message = ErrorCodeConstants. and 3 occurrences of ErrorCodeConstants. 
+			flag=true;
+			
+		//@NotNull(message = ErrorCodeConstants.DATA_VALIDATION_CODE + ErrorCodeConstants.SPLITTER + ErrorCodeConstants.RULE_52_ERROR_MESSAGE)
+			String rule_key =line.substring(line.indexOf(ErrorCodeConstants_CONST)+ErrorCodeConstants_CONST.length(),line.indexOf("+"));
+			errorCode =keyValMap.get(rule_key.strip());
+			String errorMessageKey =line.substring(line.lastIndexOf(ErrorCodeConstants_CONST)+ErrorCodeConstants_CONST.length(),line.indexOf(")"));
+			errorMessage =keyValMap.get(errorMessageKey.strip());
+			return new String[] {errorCode,errorMessage};
+		}
+		
+		
+		System.out.println("COUD NOT FOUND MATCHING PATTERN.... FOR LINE \n"+line);
+		return errorCode_MsgArr;
+	
 	}
 	
 }
